@@ -6,11 +6,12 @@ This repository contains the firmware codes (C/C++/Python/etc.) and hardware des
 
 ## 🚀 Active Projects
 
-Our current development is divided into three major tasks:
+Our current development is divided into these major tasks:
 
 1. **Fault Monitor with LED:** Hardware and firmware for detecting power system faults and triggering physical LED indicators for immediate visual diagnostics.
 2. **Speed Signal Translator:** Interface system responsible for reading, translating, and securely transmitting speed and encoder signals across the rover's control architecture.
 3. **Battery Amount Indicator:** Power monitoring circuit and firmware to track voltage/current and display real-time battery capacity.
+4. **Wiring diagrams:** The CORRECT diagram tells you how to connecting all the pins across different components
 
 ## 📂 Repository Structure
 
