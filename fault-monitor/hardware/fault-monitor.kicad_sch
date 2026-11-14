@@ -1979,8 +1979,8 @@
 			(on_board yes)
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "K"
-				(at 11.43 3.81 0)
+			(property "Reference" "K2"
+				(at 11.43 1.2701 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -1991,7 +1991,7 @@
 				)
 			)
 			(property "Value" "Fujitsu_FTR-LYCA005x"
-				(at 11.43 1.27 0)
+				(at 11.43 -1.2699 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -2001,7 +2001,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Relay_THT:Relay_SPDT_Fujitsu_FTR-LYCA005x_FormC_Vertical"
+			(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"
 				(at 11.43 -1.27 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2230,60 +2230,6 @@
 			)
 			(symbol "Fujitsu_FTR-LYCA005x_1_1"
 				(pin passive line
-					(at 5.08 -7.62 90)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "11"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 7.62 270)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 7.62 7.62 270)
-					(length 2.54)
-					(name ""
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "14"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
 					(at -5.08 7.62 270)
 					(length 2.54)
 					(name ""
@@ -2293,7 +2239,7 @@
 							)
 						)
 					)
-					(number "A1"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2311,7 +2257,43 @@
 							)
 						)
 					)
-					(number "A2"
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -7.62 90)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 7.62 270)
+					(length 2.54)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2328,27 +2310,29 @@
 			(on_board yes)
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "U"
-				(at -6.35 11.43 0)
+			(property "Reference" "U3"
+				(at -3.1181 -15.24 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
 				)
 			)
 			(property "Value" "INA228"
-				(at 3.81 11.43 0)
+				(at -3.1181 -12.7 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
 				)
 			)
-			(property "Footprint" "Package_SO:TSSOP-10_3x3mm_P0.5mm"
+			(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
 				(at 20.32 -11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2417,10 +2401,10 @@
 				)
 			)
 			(symbol "INA228_1_1"
-				(pin input line
-					(at 10.16 7.62 180)
+				(pin power_in line
+					(at 0 12.7 270)
 					(length 2.54)
-					(name "A1"
+					(name "VS"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2435,10 +2419,10 @@
 						)
 					)
 				)
-				(pin input line
-					(at 10.16 5.08 180)
+				(pin power_in line
+					(at 0 -12.7 90)
 					(length 2.54)
-					(name "A0"
+					(name "GND"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2453,10 +2437,10 @@
 						)
 					)
 				)
-				(pin open_collector line
-					(at 10.16 -7.62 180)
+				(pin input line
+					(at 10.16 -2.54 180)
 					(length 2.54)
-					(name "~{Alert}"
+					(name "SCL"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2490,60 +2474,6 @@
 					)
 				)
 				(pin input line
-					(at 10.16 -2.54 180)
-					(length 2.54)
-					(name "SCL"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 12.7 270)
-					(length 2.54)
-					(name "VS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -12.7 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
 					(at -10.16 7.62 0)
 					(length 2.54)
 					(name "Vbus"
@@ -2553,7 +2483,7 @@
 							)
 						)
 					)
-					(number "8"
+					(number "5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2571,7 +2501,7 @@
 							)
 						)
 					)
-					(number "9"
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2589,7 +2519,25 @@
 							)
 						)
 					)
-					(number "10"
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 10.16 -7.62 180)
+					(length 2.54)
+					(name "~{Alert}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2896,12 +2844,8 @@
 		(uuid "a2a32408-7c25-4802-8061-a233b16a747e")
 	)
 	(no_connect
-		(at 176.53 80.01)
-		(uuid "43c3b943-3801-4a9d-815c-4fff62224e71")
-	)
-	(no_connect
-		(at 176.53 82.55)
-		(uuid "e561026c-ab5e-41cb-919b-288cbdb67682")
+		(at 182.88 140.97)
+		(uuid "0ee53224-05c9-4f9e-8848-52e9b22f82c7")
 	)
 	(no_connect
 		(at 176.53 67.31)
@@ -3511,7 +3455,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
 			(at 166.37 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -3567,12 +3511,6 @@
 		)
 		(pin "7"
 			(uuid "168fe3ac-39b3-4537-94f6-1fcd70b5cb22")
-		)
-		(pin "9"
-			(uuid "1f441b04-c2b0-4711-9907-8446b140fa35")
-		)
-		(pin "10"
-			(uuid "2fe369a0-3a36-456f-8586-ecd7e9177652")
 		)
 		(instances
 			(project "fault-monitor"
@@ -3987,7 +3925,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"
 			(at 190.5 139.7 0)
 			(hide yes)
 			(show_name no)
@@ -4022,20 +3960,17 @@
 				)
 			)
 		)
-		(pin "A1"
+		(pin "4"
 			(uuid "b2749d1c-9b62-43d9-b648-7007fdf45033")
 		)
-		(pin "12"
+		(pin "3"
 			(uuid "1d11165f-7622-44cc-a575-2c15f72a16de")
 		)
-		(pin "11"
+		(pin "2"
 			(uuid "b4b9f68c-067f-4ed9-8f23-7d9e9a19e3fe")
 		)
-		(pin "14"
+		(pin "1"
 			(uuid "b9af7625-6e43-48dd-a5d3-43abf79e020a")
-		)
-		(pin "A2"
-			(uuid "8729b02c-5c27-43e5-b73a-de8825447657")
 		)
 		(instances
 			(project "fault-monitor"
