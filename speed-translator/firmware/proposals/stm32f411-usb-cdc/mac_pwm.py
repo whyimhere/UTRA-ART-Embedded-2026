@@ -1,19 +1,27 @@
+import argparse
+
 import serial
 import serial.tools.list_ports
 
+parser = argparse.ArgumentParser(description="Send PWM commands to the STM32 over USB serial.")
+parser.add_argument("--port", help="Serial device, e.g. COM3 or /dev/ttyACM0")
+args = parser.parse_args()
+
 print("STM32 PWM Controller")
 
-ports = [
-    p.device for p in serial.tools.list_ports.comports()
-    if "usbmodem" in p.device.lower()
-]
+port = args.port
+if port is None:
+    ports = [
+        p.device for p in serial.tools.list_ports.comports()
+        if "usbmodem" in p.device.lower()
+    ]
+    if not ports:
+        parser.error(
+            "No macOS USB modem port detected. List available ports with "
+            "python -m serial.tools.list_ports and pass --port PORT."
+        )
+    port = ports[0]
 
-if not ports:
-    print("ERROR: No STM32 USB serial port detected.")
-    print("Check BOOT0 is LOW and reset the STM32.")
-    raise SystemExit(1)
-
-port = ports[0]
 print("Using port:", port)
 
 with serial.Serial(port, 115200, timeout=2) as ser:
