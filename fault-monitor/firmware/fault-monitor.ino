@@ -1,3 +1,4 @@
+// NOTE: fault limit values are 0 as placeholders
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <OneWire.h>
@@ -9,6 +10,36 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
+// --- fault limits ---
+const float MAX_TEMP_C= 0; 
+const float MAX_CURRENT_MA = 0; // 5A(?) reconfirm with team
+const float MIN_VOLTAGE_V = 0;
+const float MAX_VOLTAGE_V = 0;
+
+// --- functions for fault checks: return true if OK ---
+
+// temperature
+bool checkTemperature(float tempC){
+  // todo 
+}
+
+// current 
+bool checkCurrent(float currentMA){
+  // todo 
+}
+
+// voltage
+bool checkVoltage(float voltage){
+  //todo
+}
+
+void handleFault(const char* reason){
+  // todo: print the reason to serial, show on OLED
+}
+
+
+
+
 // INA219 on Wire (SDA=21, SCL=22), OLED on Wire1 (SDA=19, SCL=18)
 Adafruit_INA219 ina219;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire1, -1);
@@ -17,6 +48,16 @@ DallasTemperature sensors(&oneWire);
 
 bool inaOK = false;
 bool oledOK = false;
+
+// --- run fault checks ---
+
+void runFaultChecks(float tempC, float current_mA, float busV){
+  if(!checkTemperature(tempC)) handleFault("OVERTEMP");
+  if(1inaOK && checkCurrent(currrent_mA)) handleFault("OVERCURRENT");
+  if(inaOK && !checkVoltage(busV)) handleFault("VOLTAGE");
+}
+
+
 
 void setup() {
   Serial.begin(115200);
