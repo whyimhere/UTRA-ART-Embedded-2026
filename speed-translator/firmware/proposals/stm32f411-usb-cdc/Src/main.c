@@ -15,7 +15,7 @@
  * - 0% -> 100% -> 0% sine-shaped duty cycle
  * - 4-second sine period
  * - USB CDC communication
- * - TIM2 Input Capture initialization
+ * - PA0 frequency reporting over USB
  *
  ******************************************************************************
  */
@@ -28,6 +28,8 @@
 /* USER CODE BEGIN Includes */
 #include "pwm_control.h"
 #include "sine_pwm.h"
+#include "usbd_cdc_if.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -36,6 +38,14 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
+#define CAPTURE_TICK_HZ 1000000UL
+#define SIGNAL_TIMEOUT_MS 500U
+#define REPORT_INTERVAL_MS 500U
+
+static volatile uint32_t previous_capture;
+static volatile uint32_t last_edge_ms;
+static volatile uint32_t period_ticks;
+static volatile uint8_t have_previous_edge;
 
 /* USER CODE END PV */
 
@@ -48,6 +58,7 @@ static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN PFP */
+static void report_input_frequency(void);
 
 /* USER CODE END PFP */
 
@@ -82,6 +93,11 @@ int main(void)
      */
     Sine_PWM_Init();
 
+    if (HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -105,6 +121,7 @@ int main(void)
          * Update interval: 10 milliseconds
          */
         Sine_PWM_Update();
+        report_input_frequency();
 
         /* USER CODE END 3 */
     }
@@ -299,13 +316,10 @@ static void MX_TIM1_Init(void)
 /**
  * @brief TIM2 Input Capture Initialization
  *
- * Reserved for future speed feedback.
- *
  * Timer clock = 96 MHz
  * Prescaler = 95
  * Counter frequency = 1 MHz
- *
- * TIM2 is initialized but capture is not started.
+
  */
 static void MX_TIM2_Init(void)
 {
@@ -330,7 +344,9 @@ static void MX_TIM2_Init(void)
     htim2.Init.AutoReloadPreload =
         TIM_AUTORELOAD_PRELOAD_DISABLE;
 
-    if (HAL_TIM_IC_Init(&htim2) != HAL_OK)
+    /* Base init runs the existing MSP setup for PA0 and TIM2 IRQ. */
+    if (HAL_TIM_Base_Init(&htim2) != HAL_OK ||
+        HAL_TIM_IC_Init(&htim2) != HAL_OK)
     {
         Error_Handler();
     }
@@ -355,11 +371,6 @@ static void MX_TIM2_Init(void)
     {
         Error_Handler();
     }
-
-    /*
-     * Do not start TIM2 Input Capture yet.
-     * GPIO and interrupt configuration are still needed.
-     */
 }
 
 /**
@@ -424,3 +435,68 @@ void assert_failed(uint8_t *file,
 
 #endif
 
+
+
+/* USER CODE BEGIN 4 */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *timer)
+{
+    if (timer->Instance != TIM2 || timer->Channel != HAL_TIM_ACTIVE_CHANNEL_1)
+    {
+        return;
+    }
+
+    uint32_t captured = HAL_TIM_ReadCapturedValue(timer, TIM_CHANNEL_1);
+    uint32_t now = HAL_GetTick();
+    period_ticks = 0U;
+    if (have_previous_edge && now - last_edge_ms < SIGNAL_TIMEOUT_MS)
+    {
+        /* Unsigned subtraction handles wrap of the 32-bit counter. */
+        period_ticks = captured - previous_capture;
+    }
+    previous_capture = captured;
+    last_edge_ms = now;
+    have_previous_edge = 1U;
+}
+
+static void report_input_frequency(void)
+{
+    static uint32_t last_report_ms;
+    uint32_t now = HAL_GetTick();
+    if (now - last_report_ms < REPORT_INTERVAL_MS)
+    {
+        return;
+    }
+    last_report_ms = now;
+
+    /* Take a consistent snapshot of the values written by the interrupt. */
+    uint32_t irq_state = __get_PRIMASK();
+    __disable_irq();
+    uint32_t ticks = period_ticks;
+    uint32_t edge_age_ms = HAL_GetTick() - last_edge_ms;
+    if (edge_age_ms >= SIGNAL_TIMEOUT_MS)
+    {
+        period_ticks = 0U;
+        have_previous_edge = 0U;
+    }
+    __set_PRIMASK(irq_state);
+
+    char message[64];
+    int length;
+    if (ticks == 0U || edge_age_ms >= SIGNAL_TIMEOUT_MS)
+    {
+        length = snprintf(message, sizeof message, "PA0: no signal\r\n");
+    }
+    else
+    {
+        unsigned long centihz = (CAPTURE_TICK_HZ * 100UL + ticks / 2U) / ticks;
+        length = snprintf(message, sizeof message, "PA0: %lu.%02lu Hz\r\n",
+                          centihz / 100UL, centihz % 100UL);
+    }
+
+    if (length > 0 && (size_t)length < sizeof message)
+    {
+        /* CDC copies the message into its own transmit buffer. */
+        CDC_Transmit_FS((uint8_t *)message, (uint16_t)length);
+    }
+}
+/* USER CODE END 4 */
