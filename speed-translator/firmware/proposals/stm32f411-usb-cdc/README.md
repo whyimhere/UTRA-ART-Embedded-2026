@@ -59,3 +59,26 @@ python3 -m venv .venv
 ```
 
 On macOS the script can detect a USB modem port automatically. To choose a specific port, list ports with `.venv/bin/python -m serial.tools.list_ports -v` and pass `--port`.
+
+## Test PA0 frequency capture
+
+PA0 (TIM2 channel 1) measures the time between rising edges. Reports are sent
+over USB every 500 ms. PA8 remains the PWM output. This test does not change
+the PWM based on the measured frequency.
+
+For a 5 V Arduino Uno, wire D9 through a 1 kΩ resistor to PA0, then connect a
+1.5 kΩ resistor from PA0 to GND. Tie the two boards' grounds together. This
+divider reduces a 5 V high level to about 3 V at PA0.
+
+Close the PWM controller before opening the same serial port in miniterm:
+
+```sh
+python -m serial.tools.miniterm PORT 115200
+```
+
+Replace PORT with the STM32 serial port. With a generator cycling through
+100, 200, and 500 Hz, expect readings near those values. Remove the signal
+and confirm that the output changes to `PA0: no signal`. Press Ctrl+] to exit.
+
+The capture needs two rising edges less than 500 ms apart. This timeout is
+intended for the test frequencies above.
