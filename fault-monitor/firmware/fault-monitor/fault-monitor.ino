@@ -13,7 +13,7 @@
 
 // --- fault limits ---
 const float MAX_TEMP_C= 45; // set by frank, may change later
-const float MAX_CURRENT_MA = 6; 
+const float MAX_CURRENT_MA = 6000; 
 const float MIN_VOLTAGE_V = 22; 
 const float MAX_VOLTAGE_V = 30;  
 
