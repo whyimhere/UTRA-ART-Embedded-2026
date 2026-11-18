@@ -1,4 +1,5 @@
 // NOTE: fault limit values are 0 as placeholders
+
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <OneWire.h>
@@ -11,34 +12,52 @@
 #define SCREEN_HEIGHT 64
 
 // --- fault limits ---
-const float MAX_TEMP_C= 0; 
-const float MAX_CURRENT_MA = 0; // 5A(?) reconfirm with team
-const float MIN_VOLTAGE_V = 0;
-const float MAX_VOLTAGE_V = 0;
+const float MAX_TEMP_C= 45; // set by frank, may change later
+const float MAX_CURRENT_MA = 6; 
+const float MIN_VOLTAGE_V = 22; 
+const float MAX_VOLTAGE_V = 30;  
 
 // --- functions for fault checks: return true if OK ---
 
-// temperature
+// checks for temperature
 bool checkTemperature(float tempC){
-  // todo 
+  if (tempC == DEVICE_DISCONNECTED_C){ // sensor unplugged
+    return false;
+  }
+  if (tempC > MAX_TEMP_C){ // too hot
+    return false; 
+  }else{
+    return true; 
+  }
 }
 
-// current 
+// checks for current 
 bool checkCurrent(float currentMA){
-  // todo 
+  if (currentMA > MAX_CURRENT_MA){
+    return false;
+  }else{
+    return true;
+  }
 }
 
-// voltage
+// checks for voltage
 bool checkVoltage(float voltage){
-  //todo
+  if (voltage < MIN_VOLTAGE_V){
+    return false;
+  }
+  if (voltage > MAX_VOLTAGE_V){
+    return false;
+  }else{
+    return true;
+  }
 }
 
+// handling fault 
 void handleFault(const char* reason){
   // todo: print the reason to serial, show on OLED
+  Serial.print("FAULT: ");
+  Serial.println(reason);
 }
-
-
-
 
 // INA219 on Wire (SDA=21, SCL=22), OLED on Wire1 (SDA=19, SCL=18)
 Adafruit_INA219 ina219;
@@ -53,7 +72,7 @@ bool oledOK = false;
 
 void runFaultChecks(float tempC, float current_mA, float busV){
   if(!checkTemperature(tempC)) handleFault("OVERTEMP");
-  if(1inaOK && checkCurrent(currrent_mA)) handleFault("OVERCURRENT");
+  if(inaOK && !checkCurrent(current_mA)) handleFault("OVERCURRENT");
   if(inaOK && !checkVoltage(busV)) handleFault("VOLTAGE");
 }
 
@@ -101,6 +120,8 @@ void loop() {
     current_mA = ina219.getCurrent_mA();
     power_mW   = ina219.getPower_mW();
   }
+
+  runFaultChecks(tempC, current_mA, busV);
 
   // Serial output
   if (tempC == DEVICE_DISCONNECTED_C) {
