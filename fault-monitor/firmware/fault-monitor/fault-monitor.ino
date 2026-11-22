@@ -1,5 +1,3 @@
-// NOTE: fault limit values are 0 as placeholders
-
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <OneWire.h>
@@ -52,7 +50,7 @@ bool checkVoltage(float voltage){
   }
 }
 
-// current fault for the display to show
+// current fault for the display to show, if OK then no faults 
 const char* currentFault = "OK";
 
 // handling fault 
