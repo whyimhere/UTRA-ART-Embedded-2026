@@ -52,9 +52,12 @@ bool checkVoltage(float voltage){
   }
 }
 
+// current fault for the display to show
+const char* currentFault = "OK";
+
 // handling fault 
 void handleFault(const char* reason){
-  // todo: print the reason to serial, show on OLED
+  currentFault = reason;
   Serial.print("FAULT: ");
   Serial.println(reason);
 }
@@ -71,6 +74,7 @@ bool oledOK = false;
 // --- run fault checks ---
 
 void runFaultChecks(float tempC, float current_mA, float busV){
+  currentFault = "OK";
   if(!checkTemperature(tempC)) handleFault("OVERTEMP");
   if(inaOK && !checkCurrent(current_mA)) handleFault("OVERCURRENT");
   if(inaOK && !checkVoltage(busV)) handleFault("VOLTAGE");
